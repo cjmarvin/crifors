@@ -1,0 +1,299 @@
+CODE V>     in print_single_order_coordinates
+CODE V> ZOO 1
+CODE V>  REF 1
+CODE V>  GRO S"ECHELLE" (^ORD1)
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1146.701
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 24.2457146289
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = 69.6197912838
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 20.8682831783
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = 69.3238070169
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1145.522
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 24.0190872177
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = 62.2362885947
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 20.6448728582
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = 61.9493768379
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1144.342
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 23.7952751349
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = 54.9411912064
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 20.4241049534
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = 54.6630849009
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1143.163
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 23.5741631778
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = 47.7307810081
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 20.2058704948
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = 47.4612293173
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1141.983
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 23.3556427889
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = 40.6015579134
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 19.9900667484
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = 40.3403249727
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1140.804
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 23.1396115373
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = 33.5502222445
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 19.7765967304
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = 33.297086033
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1139.625
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 22.9259726492
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = 26.573658866
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 19.5653687679
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = 26.3284101855
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1138.445
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 22.7146345819
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = 19.6689228614
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 19.3562960983
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = 19.4313644114
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1137.266
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 22.5055106348
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = 12.8332265758
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 19.1492965064
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = 12.6031721131
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1136.086
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 22.298518596
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = 6.06392786909
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 18.9442919916
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = 5.8412014434
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1134.907
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 22.0935804183
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = -0.641480553384
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 18.7412084647
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = -0.857045296394
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1133.728
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 21.8906219236
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = -7.28538085034
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 18.5399754701
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = -7.49394130572
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1132.548
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 21.6895725311
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = -13.8700388969
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 18.3405259309
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = -14.0717440826
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1131.369
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 21.4903650079
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = -20.3976123691
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 18.1427959144
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = -20.5926034594
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1130.189
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 21.2929352402
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = -26.8701581399
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 17.946724417
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = -27.058568955
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1129.01
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 21.0972220214
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = -33.2896390562
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 17.7522531655
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = -33.4715965123
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1127.83
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 20.9031668576
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = -39.6579301584
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 17.5593264338
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = -39.8335546815
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1126.651
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 20.7107137874
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = -45.976824397
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 17.3678908734
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = -46.1462303046
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1125.472
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 20.5198092152
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = -52.2480378942
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 17.1778953567
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = -52.4113337477
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1124.292
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 20.3304017568
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = -58.4732147943
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 16.9892908318
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = -58.6305037241
+CODE V>   WL (^WL_MAX-^I*^WL_STEP)
+     Reference wavelength & wavelength weights have been reset to default values
+     WARNING - Index measured at 24.00 degrees with lens system at 20.00
+               degrees for glass CAF2
+CODE V>   WL ?  ! print wl
+     WL = 1123.113
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 20.1424420965
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = -64.6539317405
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = 16.8020301877
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = -64.8053117471
+CODE V>     out t

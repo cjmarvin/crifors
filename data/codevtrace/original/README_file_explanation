@@ -1,0 +1,26 @@
+Name of file contains information on band (Y,J,H,K,L,M), angle of echelle
+grating and order.
+
+Each file contains information on the position on the detector (X,Y, 
+both in mm) of the image of the top/bottom points of the slit at
+a given wavelength.
+The slit image can be accurately approximated by a straight line connecting 
+the top/bottom points.
+Note that the echelle disperses in the Y direction.
+
+The information are printed sequentially. 
+Below is a "block" of data referring to a given wavelength.
+The "block" is repeated n-times in each file, to cover all the 
+wavelengths used to sample a given order.
+Positions at intermediate wavelenghts can be determined by interpolation.
+
+CODE V>   WL ?  ! print wl
+     WL = 1630.337
+CODE V>   eva (x si r1 f1) ! Xpos bottom of slit
+     (X SI R1 F1) = 0.884800177712
+CODE V>   eva (y si r1 f1) ! Ypos bottom of slit
+     (Y SI R1 F1) = 60.6477243875
+CODE V>   eva (x si r1 f3) ! Xpos top of slit
+     (X SI R1 F3) = -2.35555778432
+CODE V>   eva (y si r1 f3) ! Ypos top of slit
+     (Y SI R1 F3) = 60.6264853021
