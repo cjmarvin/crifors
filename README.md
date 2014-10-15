@@ -155,14 +155,16 @@ With the wavemap source, `w`, `W` or `wavemap`, pixel values will be wavelengths
 	
 # __telluric lines__
 
-The `--telluric` flag can be passed which will include the following species:
-- CH4
-- CO2
-- H2O
-- N2O
-- O2
-- O3
+The following telluric line species calculated by LBLRTM (see Husser & Ulbrich, 2014) are included:
 
++ CH4
++ CO2
++ H2O
++ N2O
++ O2
++ O3
+
+The flag can be entered as follows:
 
 	python crifors.py Y </path/to/spectrum.fits> --telluric
 	
