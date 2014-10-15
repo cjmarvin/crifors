@@ -181,3 +181,16 @@ only detector settings.
 	python crifors.py Y </path/to/spectrum.fits> --config=<path/to/config.cfg>
 
 
+# _TODO_
+-----
+ * physical model w/ blaze
+ * polarimeter mode
+ * background light file
+ * config file input
+ * parameters by command line
+
+# _WISH LIST_
+----
+ * time variation of parameters (slit psf center, seeing, etc.)?
+ * slit sky background?
+ * multiprocessing?
