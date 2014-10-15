@@ -3,7 +3,8 @@
 
 ![VLT - Paranal Observatory, Chile](http://upload.wikimedia.org/wikipedia/commons/e/ee/The_VLT%C2%B4s_Laser_Guide_Star.jpg)
 
-#Prerequisites/Requirements
+# __Prerequisites/Requirements__
+------------------------------------------------------------
 - GCC
 - GNU Make
 - SAO-DS9 (for viewing output __FITS__)
