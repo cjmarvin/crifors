@@ -164,7 +164,9 @@ The `--telluric` flag can be passed which will include the following species:
 - O2
 - O3
 
-		python crifors.py Y </path/to/spectrum.fits> --telluric
+
+
+	python crifors.py Y </path/to/spectrum.fits> --telluric
 	
 # __input config file__
 
