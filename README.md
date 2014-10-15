@@ -3,7 +3,7 @@
 
 ![VLT - Paranal Observatory, Chile](http://upload.wikimedia.org/wikipedia/commons/e/ee/The_VLT%C2%B4s_Laser_Guide_Star.jpg)
 
-# __Prerequisites/Requirements__
+# _Prerequisites/Requirements_
 ------------------------------------------------------------
 - GCC
 - GNU Make
