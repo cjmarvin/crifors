@@ -156,14 +156,12 @@ With the wavemap source, `w`, `W` or `wavemap`, pixel values will be wavelengths
 # __telluric lines__
 
 The `--telluric` flag can be passed which will include the following species:
-
 - CH4
 - CO2
 - H2O
 - N2O
 - O2
 - O3
-
 
 
 	python crifors.py Y </path/to/spectrum.fits> --telluric
