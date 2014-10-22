@@ -33,8 +33,9 @@ This can be done simply by typing in the terminal:
 
 	make clean
 
-This command will remove all backup and compiled files so that the directory
-reverts back to its original state.
+This command will remove all logs, backup and compiled files so that the
+directory reverts back to its original state.  However it will not remove any
+fits files in the 'output' directory.
 
 
 # _Examples_
