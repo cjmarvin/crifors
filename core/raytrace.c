@@ -229,8 +229,7 @@ void raytrace_interp_bin(
 void raytace_solve_general(
     int BLAZE_FLAG,
     int RETURN_MODE,
-    unsigned long nw,      /* size of w (and also x and y) */
-    unsigned long nslit,   /* number of slit elements */
+    unsigned long n,      /* number of slit/wavelength elements */
     unsigned short m,
     int NXPIX,
     int NYPIX,
