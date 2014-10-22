@@ -4,11 +4,12 @@
 ![VLT - Paranal Observatory, Chile](http://upload.wikimedia.org/wikipedia/commons/e/ee/The_VLT%C2%B4s_Laser_Guide_Star.jpg)
 
 # _Prerequisites/Requirements_
-------------------------------------------------------------
+------------------------------
 - GCC
 - GNU Make
-- SAO-DS9 (for viewing output __FITS__)
-- Python 2.6 or 2.7
+- GSL (GNU Scientific Library) 1.6+
+- SAO-DS9 (optional, for viewing output __FITS__)
+- Python 2.7 (see below)
     + NumPy 1.7+
     + Scipy 0.12+
     + Matplotlib 1.1+
@@ -16,11 +17,11 @@
 
 In order to facilitate the compatibility of required Python packages,
 an installation of the [Anaconda Python Distribution](https://store.continuum.io/cshop/anaconda/ "Anaconda Python Distribution")
-is highly recommended, as it contains all required packages.
+is highly recommended as it contains all required packages.
 The academic license is free, and installation does not require root priveledges.
 
 # _Setup_
---------------
+---------
 
 # __make__
 Before running, the C source code must be compiled.
@@ -37,22 +38,22 @@ reverts back to its original state.
 
 
 # _Examples_
---------------------
+------------
 
 # __get help / list options__
 
 A detailed list of argument options and their explanations can be found
 by typing
 
-	python crifors.py -h 
-or 
+	python crifors.py -h
+or
 
 	python crifors.py --help
 
 # __spectral band__
 
 	python crifors.py Y
-	
+
 This simple command will produce a simulated Y band image of an included
 PHOENIX synthetic spectra (Husser et al. 2013).
 The output will be directed to the `output` directory.
@@ -79,7 +80,7 @@ python crifors.py Y </path/to/wavelength.fits> </path/to/flux.fits>
 The wavelengths units must be in [nm].  If they are not (ie. Angstroms),
 a `--factor` can be passed to convert it to nm.
 
-```bash	
+```bash
 python crifors.py Y </path/to/wavelength.fits> </path/to/flux.fits> --factor=0.1
 ```
 
@@ -111,8 +112,8 @@ this can be alleviated by using the `--nruns` option, where each simulation
 run would be equal to `nrays`.
 
 	python crifors.py Y </path/to/spectrum.fits> --nrays=1e8 --nruns=20
-	
-would be the same as 
+
+would be the same as
 
 	python crifors.py Y </path/to/spectrum.fits> --nrays=2e9
 
@@ -122,14 +123,14 @@ The input spectra can be shifted by a given radial velocity in [m/s] using the
 `--rv` option:
 
 	python crifors.py Y </path/to/spectrum.fits> --rv=3.0
-	
+
 # __slit width__
 
 The width of the slit can either be 0.2 (default) or 0.4 arcseconds.
 This is controlled by the `--slit-width` option:
 
 	python crifors.py Y </path/to/spectrum.fits> --slit-width=0.4
-	
+
 # __seeing__
 
 Seeing is represented by the FWHM of a gaussian, with a default of 1.5
@@ -148,11 +149,11 @@ With the flatfield source, `f`, `F` or `flatfield`, an ideal flatfield spectrum
 is fed into the spectrograph.  It assumes a continuous, uniform distribution.
 
 	python crifors.py Y F
-	
+
 ## ~~wavemap~~
 Not implemented yet.
 With the wavemap source, `w`, `W` or `wavemap`, pixel values will be wavelengths instead of counts.
-	
+
 # __telluric lines__
 
 The following telluric line species calculated by LBLRTM (see Husser & Ulbrich, 2014) are included:
@@ -167,7 +168,7 @@ The following telluric line species calculated by LBLRTM (see Husser & Ulbrich, 
 The flag can be entered as follows:
 
 	python crifors.py Y </path/to/spectrum.fits> --telluric
-	
+
 # __input config file__
 
 A config file of instrument and simulation can be passed to override default
@@ -182,15 +183,15 @@ only detector settings.
 
 
 # _TODO_
------
+--------
  * physical model w/ blaze
  * polarimeter mode
  * background light file
- * config file input
+ * ~~config file input~~
  * parameters by command line
 
 # _WISH LIST_
-----
+-------------
  * time variation of parameters (slit psf center, seeing, etc.)?
  * slit sky background?
- * multiprocessing?
+ * multiprocessing? (this will require significant reworking if using `multiprocessing` module; otherwise could use `pathos`, but still much work)
