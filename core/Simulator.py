@@ -13,6 +13,7 @@ import sys
 import time
 import cinterface as ci
 from defaults import *
+from noise import add_noise
 import physics
 import slit
 import wavefuncs as wf
@@ -81,11 +82,16 @@ class Simulator(object):
             self.simulate()
 
 
+    def add_noise(self):
+        if self.noise:
+            add_noise(self)
+
+
     def simulate(self, plot=False, **kwargs):
         """
         TODO Different run parameters can be passed through kwargs
         """
-        
+
         waves, pdf = self.source_spectrum[0], self.source_spectrum[1]
         pdf_tot = scipy.integrate.simps(pdf, waves)
         t0 = time.time()
@@ -230,6 +236,94 @@ class Simulator(object):
             ct.c_double,            # tau_dm
             ct.c_double,            # tau_dr
             ct.c_double,            # slit_ratio
+            ct.c_ulong,             # nslit
+            ct.c_uint,              # cn
+            ci.array_1d_double,     # cwl
+            ci.array_1d_double,     # cxb
+            ci.array_1d_double,     # cxm
+            ci.array_1d_double,     # cxt
+            ci.array_1d_double,     # cyb
+            ci.array_1d_double,     # cym
+            ci.array_1d_double,     # cyt
+            ci.array_1d_double,     # cphi
+            ci.array_1d_double,     # waves
+            ci.array_1d_double,     # slit_x
+            ci.array_1d_double,     # slit_y
+            ci.array_2d_uint]       # outarr
+        func.restype = None
+        log.info("Raytracing order %s...", m)
+        func(nxpix, nypix, dpix, xdl_0, xdm_0, xdr_0,
+            ydl_0, ydm_0, ydr_0, tau_dl, tau_dm, tau_dr, slit_ratio, n, cn, wl,
+            xbot, xmid, xtop, ybot, ymid, ytop, phi, waves, slit_x, slit_y,
+            self.outarr)
+
+
+    def solve(self, m, waves, slit_x, slit_y):
+        # SEND TO C FUNCTION
+        nxpix = self.det_dims[1]
+        nypix = self.det_dims[0]
+        dpix = self.dpix
+        slit_ratio = self.slit_ratio
+        n = slit_x.size
+        cn = wl.size
+        xdl_0 = self.xdl_0
+        xdm_0 = self.xdm_0
+        xdr_0 = self.xdr_0
+        ydl_0 = self.ydl_0
+        ydm_0 = self.ydm_0
+        ydr_0 = self.ydr_0
+        tau_dl = self.tau_dl
+        tau_dm = self.tau_dm
+        tau_dr = self.tau_dr
+        func = ci.raytrace.raytrace_solve_general
+        func.argtypes = [
+            ct.c_int,               # blaze_flag
+            ct.c_int,               # return_mode
+            ct.c_ulong,             # n (slit and waves)
+            ct.c_uint,              # m
+            ct.c_int,               # nxpix
+            ct.c_int,               # nypix
+            ct.c_double,            # f_col
+            ct.c_double,            # f_col_2
+            ct.c_double             # alpha_e,
+            ct.c_double             # blaze_e,
+            ct.c_double             # gamma_e,
+            ct.c_double             # sigma_e,
+            ct.c_double             # alpha_e,
+            ct.c_double             # blaze_e,
+            ct.c_double             # sigma_e,
+            ct.c_double             # f_cam,
+            ct.c_double             # f_cam_1,
+            ct.c_double             # dpix,
+            ci.array_1d_double n_sell
+            ci.array_1d_double slit_x
+            ci.array_1d_double slit_y
+            ci.array_1d_double waves
+            ci.array_1d_double returnx
+            ci.array_1d_double returny
+            ci.array_2d_uint returnwaves
+            ci.array_2d_uint returncounts]
+
+            double* restrict n_sell,
+    double* restrict xslit,          /* slit location */
+    double* restrict yslit,          /* slit location */
+    double* restrict lamb,            /* wavelengths */
+    double* restrict w,               /* weights/intensities */
+    double* restrict ccd,             /* ccd array */
+    unsigned long* restrict counts, /* counts array */
+    unsigned long* restrict m_list, /* order array */
+    double* restrict returnx,
+    double* restrict returny
+
+            ct.c_double,            # xdl_0
+            ct.c_double,            # xlm_0
+            ct.c_double,            # xdr_0
+            ct.c_double,            # ydl_0
+            ct.c_double,            # ydm_0
+            ct.c_double,            # ydr_0
+            ct.c_double,            # tau_dl
+            ct.c_double,            # tau_dm
+            ct.c_double,            # tau_dr
             ct.c_ulong,             # nslit
             ct.c_uint,              # cn
             ci.array_1d_double,     # cwl

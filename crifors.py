@@ -81,8 +81,8 @@ Option details:
     using LBLRTM code (see Husser & Ulbrich, 2014).
 -m, --model=MODEL
     This can be of the choices (interp, solve).  As of now, 'solve' is not
-    currently implemented.    
---bglight=BGLIGHT  
+    currently implemented.
+--bglight=BGLIGHT
     This is the background light file. Not currently supported.
 --config=CONFIG
     Input configuration file to change instrument or simulation parameters.
@@ -127,17 +127,17 @@ Examples:
     This will simulate a J band image using the included PHOENIX spectrum.
     It will include telluric lines and noise, and will begin with an input
     number of rays of 1e9.
-    
+
 >> python crifors.py L ~/Desktop/spectrum.fits --plot
     This will create an L band image of the source spectrum in the user's
     Desktop, and will open an interactive plot of the image and the spectrum
     prior to finishing.
-    
->> python crifors.py K --seeing=2.0 --factor=0.1 ~/documents/waves.txt \ 
+
+>> python crifors.py K --seeing=2.0 --factor=0.1 ~/documents/waves.txt \
 ~/documents/flux.fits
     This will decrease the seeing to 2 arcseconds, and will convert the
     wavelength file, given in Angstroms, to nm.
-    
+
 """
 __author__ = 'Christopher J. Marvin, Mathias Zechmeister'
 
@@ -180,8 +180,7 @@ def main():
     simulator.run()
 
     # ADD NOISE
-    if args["--noise"]:
-        core.add_noise(simulator)
+    simulator.add_noise()
 
     if args["--plot"]:
         log.info("Opening plot...")
