@@ -7,7 +7,7 @@
 ------------------------------
 - GCC
 - GNU Make
-- [GSL (GNU Scientific Library)] 1.16+ (http://ftp.u-tx.net/gnu/gsl/ "GSL (GNU Scientific Library) 1.16+")
+- [GNU Scientific Library-GSL] 1.16+ (http://ftp.u-tx.net/gnu/gsl/ "GNU Scientific Library 1.16+")
 - SAO-DS9 (optional, for viewing output __FITS__)
 - Python 2.7 (see below)
     + NumPy 1.7+
