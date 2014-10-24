@@ -188,9 +188,9 @@ def write_to_fits(sim, gzip=True):
     hdu = fits.PrimaryHDU(np.asarray(sim.outarr, dtype=np.uint16))
 
     # create ImageHDU objects for detector images
-    hdu_dl = fits.ImageHDU(sim.outarr[:, :sim.nxpix])
-    hdu_dm = fits.ImageHDU(sim.outarr[:, sim.nxpix:2*sim.nxpix])
-    hdu_dr = fits.ImageHDU(sim.outarr[:, 2*sim.nxpix:3*sim.nxpix])
+    hdu_dl = fits.ImageHDU(np.asarray(sim.outarr[:, :sim.nxpix],dtype=np.uint16))
+    hdu_dm = fits.ImageHDU(np.asarray(sim.outarr[:, sim.nxpix:2*sim.nxpix], dtype=np.uint16))
+    hdu_dr = fits.ImageHDU(np.asarray(sim.outarr[:, 2*sim.nxpix:3*sim.nxpix],dtype=np.uint16))
     hdulist = fits.HDUList([hdu, hdu_dl, hdu_dm, hdu_dr])
     header = hdu.header
 
