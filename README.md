@@ -154,6 +154,12 @@ is fed into the spectrograph.  It assumes a continuous, uniform distribution.
 Not implemented yet.
 With the wavemap source, `w`, `W` or `wavemap`, pixel values will be wavelengths instead of counts.
 
+# __spread__
+This option convolves each ray with a kernel.  The advantage of this is that it
+can produce a higher SN image with less computational time.
+
+  python crifors.py Y --spread
+
 # __telluric lines__
 
 The following telluric line species calculated by LBLRTM (see Husser & Ulbrich, 2014) are included:
