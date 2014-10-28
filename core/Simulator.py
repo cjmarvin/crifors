@@ -160,6 +160,8 @@ class Simulator(object):
         log.info("Initializing raytracing model: %s", self.model)
         if self.model == "interp":
             return self.interp
+        elif self.model == "solve":
+            return self.solve
 
     # =========================[ model methods ]===============================
 
@@ -260,11 +262,25 @@ class Simulator(object):
 
     def solve(self, m, waves, slit_x, slit_y):
         # SEND TO C FUNCTION
+        blaze_flag = int(self.blaze)
+        return_mode = 0
         nxpix = self.det_dims[1]
         nypix = self.det_dims[0]
         dpix = self.dpix
-        slit_ratio = self.slit_ratio
         n = slit_x.size
+        f_col_1 = self.f_col_1
+        f_col_2 = self.f_col_2
+        alpha_ech = self.alpha_ech
+        blaze_ech = self.blaze_ech
+        gamma_ech = self.gamma_ech
+        sigma_ech = 1.0 / self.sigma_ech_inv
+        alpha_cd = self.alpha_cd
+        sigma_cd = 1.0 / self.sigma_cd_inv
+        f_cam = self.f_cam
+        f_cam_1 = self.f_cam_1
+        returnx = np.empty(1)
+        returny = np.empty(1)
+        returnwaves = np.zeros(self.det_dims)
         xdl_0 = self.xdl_0
         xdm_0 = self.xdm_0
         xdr_0 = self.xdr_0
@@ -282,15 +298,14 @@ class Simulator(object):
             ct.c_uint,              # m
             ct.c_int,               # nxpix
             ct.c_int,               # nypix
-            ct.c_double,            # f_col
+            ct.c_double,            # f_col_1
             ct.c_double,            # f_col_2
-            ct.c_double,            # alpha_e
-            ct.c_double,            # blaze_e
-            ct.c_double,            # gamma_e
-            ct.c_double,            # sigma_e
-            ct.c_double,            # alpha_e
-            ct.c_double,            # blaze_e
-            ct.c_double,            # sigma_e
+            ct.c_double,            # alpha_ech
+            ct.c_double,            # blaze_ech
+            ct.c_double,            # gamma_ech
+            ct.c_double,            # sigma_ech
+            ct.c_double,            # alpha_cd
+            ct.c_double,            # sigma_cd
             ct.c_double,            # f_cam
             ct.c_double,            # f_cam_1
             ct.c_double,            # dpix
@@ -303,7 +318,6 @@ class Simulator(object):
             ct.c_double,            # tau_dl
             ct.c_double,            # tau_dm
             ct.c_double,            # tau_dr
-            ci.array_1d_double,     # n_sell
             ci.array_1d_double,     # slit_x
             ci.array_1d_double,     # slit_y
             ci.array_1d_double,     # waves
@@ -313,10 +327,11 @@ class Simulator(object):
             ci.array_2d_uint]       # returncounts
         func.restype = None
         log.info("Raytracing order %s...", m)
-        func(nxpix, nypix, dpix, xdl_0, xdm_0, xdr_0,
-            ydl_0, ydm_0, ydr_0, tau_dl, tau_dm, tau_dr, slit_ratio, n, cn, wl,
-            xbot, xmid, xtop, ybot, ymid, ytop, phi, waves, slit_x, slit_y,
-            self.outarr)
+        func(blaze_flag, return_mode, n, m, nxpix, nypix, f_col_1, f_col_2,
+            alpha_ech, blaze_ech, gamma_ech, sigma_ech, alpha_cd, sigma_cd,
+            f_cam, f_cam_1, dpix, xdl_0, xdm_0, xdr_0, ydl_0, ydm_0, ydr_0,
+            tau_dl, tau_dm, tau_dr, slit_x, slit_y, waves, returnx, returny,
+            returnwaves, self.outarr)
 
 
     # =========================[ slit methods ]================================
@@ -481,6 +496,3 @@ class Simulator(object):
     def wavetrace():
         desc = "1D wavelength tracing"
 
-    def solve(inst, settings):
-        log.info("Solving.")
-        sys.exit(0)

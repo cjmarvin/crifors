@@ -21,14 +21,15 @@ _bands = {
     "M" : "mband"
     }
 _sections = [
-    "instrument",
-    "echelle",
     "crossdisp",
+    "detector",
+    "echelle",
+    "instrument",
+    "model",
+    #"noise",
+    "settings",
     "slit",
     "slitpsf",
-    "detector",
-    "settings",
-    "noise"
     ]
 _cl = {
     "bglight" : "--bglight",
@@ -49,8 +50,6 @@ _cl = {
     "source" : "SOURCE",
     "telluric" : "--telluric"
     }
-
-
 log = logging.getLogger(__name__)
 
 
@@ -59,7 +58,8 @@ def merge(dict_1, dict_2):
     Values that evaluate to true take priority over false values.
     `dict_1` takes priority over `dict_2`.
     """
-    return dict((str(key), dict_1.get(key) or dict_2.get(key))
+    return dict(
+        (str(key), dict_1.get(key) or dict_2.get(key))
         for key in set(dict_2) | set(dict_1))
 
 
@@ -157,16 +157,6 @@ class Instrument(object):
         self.xdr_re = self.xdr_0 + self.nxpix*self.dpix*0.5
         self.xdlm = -(self.nxpix*self.dpix+self.xdl+self.xdm)*0.5
         self.xdmr = (self.nxpix*self.dpix+self.xdm+self.xdr)*0.5
-        # # SANITY CHECK
-        # print self.tau_dl, self.tau_dm, self.tau_dr
-        # print "(%s, %s):%s  (%s, %s):%s  (%s, %s):%s" % (
-        #     self.xdl_le, self.xdl_re, self.xdl_le-self.xdl_re,
-        #     self.xdm_le, self.xdm_re, self.xdm_le-self.xdm_re,
-        #     self.xdr_le, self.xdr_re, self.xdr_le-self.xdr_re)
-        # print "%s | %s" % (self.xdlm, self.xdmr)
-        # print "det = (%s, %s)  (%s, %s) (%s, %s)" % (self.xdl, self.ydl, self.xdm, self.ydm, self.xdr, self.ydr)
-        # print "det0 = (%s, %s)  (%s, %s) (%s, %s)" % (self.xdl_0, self.ydl_0, self.xdm_0, self.ydm_0, self.xdr_0, self.ydr_0)
-        # raw_input("Press Enter to continue...")
 
         # RUN INITIALIZATION METHODS/PROCEDURES
         self.set_spectral_orders()
@@ -190,9 +180,9 @@ class Instrument(object):
         if self.model == "interp":
             self.find_ccd_limits_interp()
 
-        elif self.model == "falloff":
-            self.find_ccd_limits_falloff()
-            pass
+        elif self.model == "solve":
+            # self.find_ccd_limits_falloff()
+            self.find_ccd_limits_interp()
 
 
     def find_ccd_limits_interp(self, write=False):

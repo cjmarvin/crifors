@@ -43,52 +43,6 @@ inline double cradians(double angle) {
 }
 
 
-// void raytrace_bin(
-//     const int NXPIX,
-//     const int NYPIX,
-//     const double DPIX,
-//     const unsigned long n,
-//     const double* restrict slitx,               /* slit location */
-//     const double* restrict slity,               /* slit location */
-//     const double* restrict xmid,                /* slit midpoint */
-//     const double* restrict ymid,                /* slit midpoint */
-//     const double* restrict slitwidth,
-//     const double* restrict slitheight,
-//     const double* restrict phi,
-//     unsigned long* restrict out) {
-//   long xbin;                                    /* x coordinate [pix] */
-//   long ybin;                                    /* y coordinate [pix] */
-//   unsigned long i;                              /* wavelength iterator */
-//   unsigned long j;                              /* slit iterator */
-//   const double XD02 = (double)NXPIX/2.0;
-//   const double YD02 = (double)NYPIX/2.0;
-//   double xd, yd, wi;
-//   double sx, sy, xm, ym, sw, sh;
-//
-//   for (i=0; i<n; ++i) {
-//     sx = slitx[i]*cos(phi[i]) - slity[i]*sin(phi[i]);
-//     sy = slitx[i]*sin(phi[i]) + slity[i]*cos(phi[i]);
-//     xm = xmid[i];
-//     ym = ymid[i];
-//     sw = slitwidth[i];
-//     sh = slitheight[i];
-//     xd = xm + sx * sw;
-//     yd = ym + sy * sh;
-//     xd /= DPIX;
-//     yd /= DPIX;
-//     xbin = (int)floor(xd + XD02);
-//     if (xbin >= 0 && xbin < NXPIX) {
-//       ybin = (int)floor(yd + YD02);
-//       if (ybin >= 0 && ybin < NYPIX) {
-//           out[xbin+NXPIX*ybin] += 1;
-//       }
-//     }
-//     progress_bar(i, n);
-//   }
-//   printf("\n");
-// }
-
-
 void raytrace_interp_bin(
     const int NXPIX,
     const int NYPIX,
@@ -226,7 +180,7 @@ void raytrace_interp_bin(
 }
 
 
-void raytace_solve_general(
+void raytrace_solve_general(
     int BLAZE_FLAG,
     int RETURN_MODE,
     unsigned long n,      /* number of slit/wavelength elements */
@@ -242,23 +196,31 @@ void raytace_solve_general(
     double GAMMA_E,
     double SIGMA_E,
     double ALPHA_G,
-    double BLAZE_G,
     double SIGMA_G,
     double F_CAM,
     double F_CAM_1,
     double DPIX,
-    double* restrict n_sell,
+    const double XDL_0,                       /* left detector x-offset */
+    const double XDM_0,                       /* middle detector y-offset */
+    const double XDR_0,                       /* right detector x-offset */
+    const double YDL_0,                       /* left detector y-offset */
+    const double YDM_0,                       /* middle detector y-offset */
+    const double YDR_0,                       /* right detector y-offset */
+    const double TAU_DL,                      /* left detector rotation */
+    const double TAU_DM,                      /* middle detector rotation */
+    const double TAU_DR,                      /* right detector rotation */
     double* restrict xslit,          /* slit location */
     double* restrict yslit,          /* slit location */
-    double* restrict lamb,            /* wavelengths */
-    double* restrict w,               /* weights/intensities */
-    double* restrict ccd,             /* ccd array */
-    unsigned long* restrict counts, /* counts array */
-    unsigned long* restrict m_list, /* order array */
+    double* restrict lamb,            /* wavelengths */    
     double* restrict returnx,
-    double* restrict returny) {
+    double* restrict returny,
+		double* restrict ccd,												/* ccd array */
+		unsigned long* restrict counts) {						/* counts array */
 
   /* pre-calculate constants */
+	ALPHA_E = cradians(ALPHA_E);
+	GAMMA_E = cradians(GAMMA_E);
+	ALPHA_G = cradians(ALPHA_G);
   const double ORDER = (double)m;
   const double F_COL2 = F_COL * F_COL;
   const double MU_E0 = ALPHA_E - M_PI;
@@ -282,8 +244,15 @@ void raytace_solve_general(
   const double SIN_NU_G1 = sin(NU_G1);
   const double COS_NU_G2 = cos(NU_G2);
   const double SIN_NU_G2 = sin(NU_G2);
-  const double XD02 = (double)NXPIX/2.0;
-  const double YD02 = (double)NYPIX/2.0;
+  const double YPIX_1_2 = (double)NYPIX/2.0;
+	const double X_OFF_L = (double)NXPIX/6.0;
+	const double X_OFF_M = X_OFF_L + (double)NYPIX;
+	const double X_OFF_R = X_OFF_M + (double)NYPIX;
+	const int NXPIX_1_3 = NXPIX / 3;
+	const int NXPIX_2_3 = 2 * NXPIX_1_3;
+  const double TAUDL = cradians(TAU_DL);
+  const double TAUDM = cradians(TAU_DM);
+  const double TAUDR = cradians(TAU_DR);
 
   /* local variables */
   double veclen;
@@ -292,133 +261,134 @@ void raytace_solve_general(
   double n_g;
   double beta;
   double blaze_eff;
-  unsigned long xbin; /* x coordinate [pix] */
-  unsigned long ybin; /* y coordinate [pix] */
+  long ix; /* x coordinate [pix] */
+  long iy; /* y coordinate [pix] */
   double x, x0, xi, xd, xt, y, y0, yd, yi, yt, z, z0, zt, fcc;
+	double xdpld, xdpmd, xdprd;
   unsigned long i;   /* wavelength iterator */
   unsigned long j;   /* slit iterator */
+	
+	// RANDOM NUMBER GENERATOR INITIALIZATION
+	double u;
+	gsl_rng* r = gsl_rng_alloc(gsl_rng_taus); /* global rng generator */
+	long seed = time(NULL);
+	gsl_rng_set(r, seed); 										/* seed the rng */
 
-  for (j=0; j<nslit; ++j) {
-    xi = xslit[j];       /* x coord */
-    yi = yslit[j];       /* y coord */
+  for (i=0; i<n; ++i) {
+    xi = xslit[i];       /* x coord */
+    yi = yslit[i];       /* y coord */
+    li = lamb[i];        /* wavelength */
 
-    for (i=0; i<nw; ++i) {
-      li = lamb[i];       /* wavelength */
-      wi = w[i];          /* intensities */
+    /* LAUNCH RAYS FROM SLIT (normalized vectors) */
+    veclen = sqrt( xi*xi + yi*yi + F_COL2 );
+    x0 = xi / veclen;
+    y0 = yi / veclen;
+    z0 = F_COL / veclen;
 
-      /* LAUNCH RAYS FROM SLIT (normalized vectors) */
-      veclen = sqrt( xi*xi + yi*yi + F_COL2 );
-      x0 = xi / veclen;
-      y0 = yi / veclen;
-      z0 = F_COL / veclen;
+    /* BLAZE FUNCTION */
+    //xb = xx;
 
-      /* BLAZE FUNCTION */
-      //xb = xx;
+    /* :::::::::::::::::::: GRATING :::::::::::::::::::::::::::::::::*/
+    /* INTO PLANE RF */
+    //xt = x0;
+    //yt = y0 * COS_NU_G0 - z0 * SIN_NU_G0;
+    //zt = y0 * SIN_NU_G0 + z0 * COS_NU_G0;
+    /* PLANE RELATION */
+    //x = xt / n_g;
+    //y = yt / n_g;
+    /* NORMALIZATION AFTER PLANE RELATION (REFRACTION) */
+    //z = (zt / fabs(zt)) * sqrt(1.0 - x*x - y*y);
 
-      /* :::::::::::::::::::: GRATING :::::::::::::::::::::::::::::::::*/
-      /* INTO PLANE RF */
-      //xt = x0;
-      //yt = y0 * COS_NU_G0 - z0 * SIN_NU_G0;
-      //zt = y0 * SIN_NU_G0 + z0 * COS_NU_G0;
-      /* PLANE RELATION */
-      //x = xt / n_g;
-      //y = yt / n_g;
-      /* NORMALIZATION AFTER PLANE RELATION (REFRACTION) */
-      //z = (zt / fabs(zt)) * sqrt(1.0 - x*x - y*y);
+    /* INTO GRISM RF and GRISM RELATION */
+    xt = x0;
+    yt = (-li / SIGMA_G) + (COS_NU_G1 * y0) - (SIN_NU_G1 * z0);
+    zt = (SIN_NU_G1 * y0) + (COS_NU_G1 * z0);
+    /* NORMALIZATION AFTER GRATING RELATION */
+    zt = (zt / fabs(zt)) * sqrt(1.0 - xt*xt - yt*yt);
 
-      /* INTO GRISM RF and GRISM RELATION */
-      xt = x0;
-      yt = (-li / SIGMA_G) + (COS_NU_G1 * y0) - (SIN_NU_G1 * z0);
-      zt = (SIN_NU_G1 * y0) + (COS_NU_G1 * z0);
-      /* NORMALIZATION AFTER GRATING RELATION */
-      zt = (zt / fabs(zt)) * sqrt(1.0 - xt*xt - yt*yt);
+    /* OUT OF GRISM RF */
+    x = xt;
+    y = (COS_NU_G2 * yt) - (SIN_NU_G2 * zt);
+    z = (SIN_NU_G2 * yt) + (COS_NU_G2 * zt);
+    /* ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
 
-      /* OUT OF GRISM RF */
-      x = xt;
-      y = (COS_NU_G2 * yt) - (SIN_NU_G2 * zt);
-      z = (SIN_NU_G2 * yt) + (COS_NU_G2 * zt);
-      /* ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
+    /* CAM-COLL */
+    fcc =  F_COL_2 / F_CAM_1 ;
+    veclen = sqrt( x*x + y*y + fcc*fcc );
+    x = x /veclen;
+    y = y / veclen;
+    z = fcc / veclen;
 
-      /* CAM-COLL */
-      fcc =  F_COL_2 / F_CAM_1 ;
-      veclen = sqrt( x*x + y*y + fcc*fcc );
-      x = x /veclen;
-      y = y / veclen;
-      z = fcc / veclen;
+    /* :::::::::::::::::::: ECHELLE :::::::::::::::::::::::::::::::::::::*/
+    /* INTO ECHELLE RF */
+    xt = (ORDER * li / SIGMA_E) - (COS_MU_E0 * x) + (SIN_MU_E0*SIN_NU_E0 * y) + (SIN_MU_E0*COS_NU_E0 * z);
+    yt = -(COS_NU_E0 * y) + (SIN_NU_E0 * z);
+    zt = -(SIN_MU_E0 * x) - (COS_MU_E0*SIN_NU_E0 * y) - (COS_MU_E0*COS_NU_E0 * z);
+    /* NORMALIZATION AFTER ECHELLE RELATION */
+    zt = (zt / fabs(zt)) * sqrt(1.0 - yt*yt - xt*xt);
 
-      /* :::::::::::::::::::: ECHELLE :::::::::::::::::::::::::::::::::::::*/
-      /* INTO ECHELLE RF */
-      xt = (ORDER * li / SIGMA_E) - (COS_MU_E0 * x) + (SIN_MU_E0*SIN_NU_E0 * y) + (SIN_MU_E0*COS_NU_E0 * z);
-      yt = -(COS_NU_E0 * y) + (SIN_NU_E0 * z);
-      zt = -(SIN_MU_E0 * x) - (COS_MU_E0*SIN_NU_E0 * y) - (COS_MU_E0*COS_NU_E0 * z);
-      /* NORMALIZATION AFTER ECHELLE RELATION */
-      zt = (zt / fabs(zt)) * sqrt(1.0 - yt*yt - xt*xt);
+    /* OUT OF ECHELLE RF */
+    x = (COS_MU_E1 * xt) - (SIN_MU_E1 * zt);
+    y = -(SIN_MU_E1*SIN_NU_E1) * xt + (COS_NU_E1 * yt - COS_MU_E1*SIN_NU_E1 * zt);
+    z = (SIN_MU_E1*COS_NU_E1) * xt + (SIN_NU_E1 * yt + COS_MU_E1*COS_NU_E1 * zt);
 
-      /* OUT OF ECHELLE RF */
-      x = (COS_MU_E1 * xt) - (SIN_MU_E1 * zt);
-      y = -(SIN_MU_E1*SIN_NU_E1) * xt + (COS_NU_E1 * yt - COS_MU_E1*SIN_NU_E1 * zt);
-      z = (SIN_MU_E1*COS_NU_E1) * xt + (SIN_NU_E1 * yt + COS_MU_E1*COS_NU_E1 * zt);
+    /* BLAZE FUNCTION*/
+    if (BLAZE_FLAG == 1) {
+      beta = M_PI * cos(ALPHA_E) * SIGMA_E * (x0 + x) / li;
+      blaze_eff = (sin(beta)*sin(beta)) / (beta*beta);
+    }
+    /* ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
 
-      /* BLAZE FUNCTION*/
-      if (BLAZE_FLAG == 1) {
-        beta = M_PI * cos(ALPHA_E) * SIGMA_E * (x0 + x) / li;
-        blaze_eff = (sin(beta)*sin(beta)) / (beta*beta);
-      }
-      /* ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
+    /* PROJECTION ONTO DETECTOR */
+    xd = x/z * F_CAM + xd_0;
+    //yd = (y/z * F_CAM  + yd_0);
+    yd = -(y/sqrt(x*x + z*z) * F_CAM + yd_0);
 
-      /* PROJECTION ONTO DETECTOR */
-      xd = x/z * F_CAM + xd_0;
-      //yd = (y/z * F_CAM  + yd_0);
-      yd = -(y/sqrt(x*x + z*z) * F_CAM + yd_0);
+    switch (RETURN_MODE) {
+      /* BIN PIXELS */
+      case 0:
+        xd /= DPIX;
+        yd /= DPIX;
+        ix = (int)floor(xd + X_OFF_L);
+				if (ix >= 0 && ix < NXPIX_1_3) {	
+          iy = (int)floor(yd + YPIX_1_2);
+          if (iy >= 0 && iy < NYPIX) {
+            if (BLAZE_FLAG == 1) {
+						  u = gsl_rng_uniform(r);
+							if (u <= blaze_eff) {
+	              ccd[ix+NXPIX*iy] += wi;
+	              counts[ix+NXPIX*iy] += 1;
+							}
+            }
+            else {
+              ccd[ix+NXPIX*iy] += wi;
+              counts[ix+NXPIX*iy] += 1;
+            }
+          }
+        }
+        break;
 
-      switch (RETURN_MODE) {
-          /* BIN PIXELS */
-          case 0:
-              xd /= DPIX;
-              yd /= DPIX;
-              xbin = (int)floor(xd + XD02);
-              if (xbin >= 0 && xbin < NXPIX)
-              {
-                  ybin = (int)floor(yd + YD02);
-                  if (ybin >= 0 && ybin < NYPIX)
-                  {
-                      if (BLAZE_FLAG == 1)
-                      {
-                          ccd[xbin+NXPIX*ybin] += wi * blaze_eff;
-                          counts[xbin+NXPIX*ybin] += 1;
-                          m_list[xbin+NXPIX*ybin] = m;
-                      }
-                      else
-                      {
-                          ccd[xbin+NXPIX*ybin] += wi;
-                          counts[xbin+NXPIX*ybin] += 1;
-                          m_list[xbin+NXPIX*ybin] = m;
-                      }
-                  }
-              }
-              break;
+      /* RETURN EXACT LOCATIONS [mm] */
+      case 1:
+        returnx[i+j*NXPIX] = xd;
+        returny[i+j*NXPIX] = yd;
+        break;
 
-          /* RETURN EXACT LOCATIONS [mm] */
-          case 1:
-              returnx[i+j*NXPIX] = xd;
-              returny[i+j*NXPIX] = yd;
-              break;
+      /* RETURN LOCATIONS 0-CENTERED IN [pix] */
+      case 2:
+        returnx[i+j*NXPIX] = xd/DPIX ;
+        returny[i+j*NXPIX] = yd/DPIX ;
+        break;
 
-          /* RETURN LOCATIONS 0-CENTERED IN [pix] */
-          case 2:
-              returnx[i+j*NXPIX] = xd/DPIX ;
-              returny[i+j*NXPIX] = yd/DPIX ;
-              break;
+      /* RETURN LOCATIONS [pix] */
+      case 3:
+        returnx[i+j*NXPIX] = xd/DPIX + (double)NXPIX/2.0;
+        returny[i+j*NXPIX] = yd/DPIX + (double)NYPIX/2.0;
+        break;
 
-          /* RETURN LOCATIONS [pix] */
-          case 3:
-              returnx[i+j*NXPIX] = xd/DPIX + (double)NXPIX/2.0;
-              returny[i+j*NXPIX] = yd/DPIX + (double)NYPIX/2.0;
-              break;
-
-          default:
-              break;
-      }
+      default:
+        break;
     }
   }
+	gsl_rng_free(r);
 }

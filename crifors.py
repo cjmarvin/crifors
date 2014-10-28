@@ -10,6 +10,7 @@ Usage:
                [--model=MODEL] [--nrays=NRAYS] [--nruns=NRUNS] [--outfn=OUTFN]
                [--plot | --plot-psf | plot-simple] [--psf=PSF] [--rv=RV]
                [--seeing=SEEING] [--slit-width=SLIT] [--verbose=LEVEL]
+               [--bootstrap]
     crifors.py [-h] | [--help] | [--version]
 
 Arguments:
@@ -28,13 +29,14 @@ Simulation options:
     --bglight=BGLIGHT  background light file
     --dlamb=DLAMB      wavelength grid resolution in nm [Default: 1e-5]
     --echang=ECHANG    incident echelle angle [Default: 63.5]
-    --factor=FACTOR    factor to multiply wavelengths to convert to nm
+    --factor=FACTOR    multiplying factor to convert wavelengths to nm
     --nrays=NRAYS      number of rays [Default: 1e7]
     --nruns=NRUNS      number of simulation runs [Default: 1]
     --psf=PSF          psf [Default: gaussian]
     --rv=RV            radial velocity shift in m/s [Default: 0.0]
     --seeing=SEEING    seeing in arcseconds [Default: 1.5]
     --slit-width=SLIT  width of slit in arcseconds [Default: 0.2]
+    --bootstrap        testing of physical model with Code V
 
 Other options:
     --config=CONFIG    simulation config file
@@ -80,8 +82,9 @@ Option details:
     This flag adds telluric lines to the input spectrum.  Lines are calculated
     using LBLRTM code (see Husser & Ulbrich, 2014).
 -m, --model=MODEL
-    This can be of the choices (interp, solve).  As of now, 'solve' is not
-    currently implemented.
+    The raytracing model to use.  This can be of the choices (interp, solve).
+    Interp is interpolation using Code V output.  Solve is solving the physical
+    model.  As of now, 'solve' is not currently implemented.
 --bglight=BGLIGHT
     This is the background light file. Not currently supported.
 --config=CONFIG
