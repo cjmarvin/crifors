@@ -3,8 +3,9 @@
 
 ![VLT - Paranal Observatory, Chile](http://upload.wikimedia.org/wikipedia/commons/e/ee/The_VLT%C2%B4s_Laser_Guide_Star.jpg)
 
-# _Prerequisites/Requirements_
 ------------------------------
+# _Prerequisites/Requirements_
+
 - GCC
 - GNU Make
 - [GNU Scientific Library 1.16+](http://ftp.u-tx.net/gnu/gsl/ "GSL")
@@ -20,8 +21,8 @@ an installation of the [Anaconda Python Distribution](https://store.continuum.io
 is highly recommended as it contains all required packages.
 The academic license is free, and installation does not require root priveledges.
 
+------------------------------
 # _Setup_
----------
 
 # __make__
 Before running, the C source code must be compiled.
@@ -36,9 +37,8 @@ This can be done simply by typing in the terminal:
 This command will remove all backup and compiled files so that the directory
 reverts back to its original state.
 
-
+------------------------------
 # _Examples_
-------------
 
 # __get help / list options__
 
@@ -73,16 +73,16 @@ Input spectra can either be specified in a single file (fits or txt),
 
 or by 2 separate files,
 
-```bash
+~~~
 python crifors.py Y </path/to/wavelength.fits> </path/to/flux.fits>
-```
+~~~
 
 The wavelengths units must be in [nm].  If they are not (ie. Angstroms),
 a `--factor` can be passed to convert it to nm.
 
-```bash
+~~~
 python crifors.py Y </path/to/wavelength.fits> </path/to/flux.fits> --factor=0.1
-```
+~~~
 
 # __echelle angle__
 
@@ -181,17 +181,16 @@ only detector settings.
 
 	python crifors.py Y </path/to/spectrum.fits> --config=<path/to/config.cfg>
 
-
+------------------------------
 # _TODO_
---------
  * physical model w/ blaze
  * polarimeter mode
  * background light file
  * ~~config file input~~
  * parameters by command line
 
+------------------------------
 # _WISH LIST_
--------------
  * time variation of parameters (slit psf center, seeing, etc.)?
  * slit sky background?
  * multiprocessing? (this will require significant reworking if using `multiprocessing` module; otherwise could use `pathos`, but still much work)
