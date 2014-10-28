@@ -141,6 +141,7 @@ def add_simulation_keywords(header, sim):
     header['HIERARCH ESO SIMU DR BIAS'] = (sim.dr_bias, '[e-] Right detector bias')
     header['HIERARCH ESO SIMU INV GAIN'] = (sim.inv_gain, '[e-/DN] inverse gain')
     header['HIERARCH ESO SIMU SIM TIME'] = (TIME, '[s] simulation time')
+    header['HIERARCH ESO SIMU SPREAD'] = (sim.spread, 'Each pixel convolved with a kernel.')
 
 
 def add_default_keywords(header):
