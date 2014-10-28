@@ -158,7 +158,7 @@ With the wavemap source, `w`, `W` or `wavemap`, pixel values will be wavelengths
 This option convolves each ray with a kernel.  The advantage of this is that it
 can produce a higher SN image with less computational time.
 
-  python crifors.py Y --spread
+    python crifors.py Y --spread
 
 # __telluric lines__
 
