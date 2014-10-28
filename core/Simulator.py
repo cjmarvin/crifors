@@ -5,6 +5,7 @@ Simulator class.
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline
 import scipy.integrate
+import scipy.ndimage.filters
 from astropy.io import fits
 import ctypes as ct
 import logging
@@ -496,3 +497,16 @@ class Simulator(object):
     def wavetrace():
         desc = "1D wavelength tracing"
 
+    def solve(inst, settings):
+        log.info("Solving.")
+        sys.exit(0)
+
+    def spreadout(self, kernel=None):
+        if not kernel:
+            kernel = np.array([[0, 0, 1, 0, 0],
+                               [0, 2, 2, 2, 0],
+                               [1, 2, 5, 2, 1],
+                               [0, 2, 2, 2, 0],
+                               [0, 0, 1, 0, 0]], dtype='int16')
+
+        self.outarr = scipy.ndimage.filters.convolve(self.outarr, kernel)

@@ -10,7 +10,7 @@ Usage:
                [--model=MODEL] [--nrays=NRAYS] [--nruns=NRUNS] [--outfn=OUTFN]
                [--plot | --plot-psf | plot-simple] [--psf=PSF] [--rv=RV]
                [--seeing=SEEING] [--slit-width=SLIT] [--verbose=LEVEL]
-               [--bootstrap]
+               [--spread]
     crifors.py [-h] | [--help] | [--version]
 
 Arguments:
@@ -36,7 +36,7 @@ Simulation options:
     --rv=RV            radial velocity shift in m/s [Default: 0.0]
     --seeing=SEEING    seeing in arcseconds [Default: 1.5]
     --slit-width=SLIT  width of slit in arcseconds [Default: 0.2]
-    --bootstrap        testing of physical model with Code V
+    --spread           spread out each ray by convolving with a kernel
 
 Other options:
     --config=CONFIG    simulation config file
@@ -124,6 +124,8 @@ Option details:
     Seeing in arcseconds.
 --slit-width=SLIT
     Width of slit in arcseconds (0.2, 0.4)
+--spread
+    tbw
 
 Examples:
 >> python crifors.py J --telluric --noise --nrays=1e9
@@ -181,6 +183,10 @@ def main():
 
     # RUN SIMULATION
     simulator.run()
+
+    # SPREAD OUT EACH RAY
+    if args["--spread"]:
+        simulator.spreadout()
 
     # ADD NOISE
     simulator.add_noise()

@@ -141,6 +141,7 @@ def add_simulation_keywords(header, sim):
     header['HIERARCH ESO SIMU DR BIAS'] = (sim.dr_bias, '[e-] Right detector bias')
     header['HIERARCH ESO SIMU INV GAIN'] = (sim.inv_gain, '[e-/DN] inverse gain')
     header['HIERARCH ESO SIMU SIM TIME'] = (TIME, '[s] simulation time')
+    header['HIERARCH ESO SIMU SPREAD'] = (sim.spread, 'Each pixel convolved with a kernel.')
 
 
 def add_default_keywords(header):
@@ -188,9 +189,9 @@ def write_to_fits(sim, gzip=True):
     hdu = fits.PrimaryHDU(np.asarray(sim.outarr, dtype=np.uint16))
 
     # create ImageHDU objects for detector images
-    hdu_dl = fits.ImageHDU(sim.outarr[:, :sim.nxpix])
-    hdu_dm = fits.ImageHDU(sim.outarr[:, sim.nxpix:2*sim.nxpix])
-    hdu_dr = fits.ImageHDU(sim.outarr[:, 2*sim.nxpix:3*sim.nxpix])
+    hdu_dl = fits.ImageHDU(np.asarray(sim.outarr[:, :sim.nxpix],dtype=np.uint16))
+    hdu_dm = fits.ImageHDU(np.asarray(sim.outarr[:, sim.nxpix:2*sim.nxpix], dtype=np.uint16))
+    hdu_dr = fits.ImageHDU(np.asarray(sim.outarr[:, 2*sim.nxpix:3*sim.nxpix],dtype=np.uint16))
     hdulist = fits.HDUList([hdu, hdu_dl, hdu_dm, hdu_dr])
     header = hdu.header
 

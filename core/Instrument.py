@@ -48,7 +48,8 @@ _cl = {
     "seeing" : "--seeing",
     "slit_width" : "--slit-width",
     "source" : "SOURCE",
-    "telluric" : "--telluric"
+    "telluric" : "--telluric",
+    "spread" : "--spread",
     }
 log = logging.getLogger(__name__)
 
@@ -103,7 +104,7 @@ class Instrument(object):
         if args["--config"]:
             log.info("Overriding defaults with input configuration file.")
             log.info("  %s", args["--config"])
-            
+
             with open(args["--config"]) as fp:
                 config = ConfigParser.SafeConfigParser()
                 config.readfp(fp)
