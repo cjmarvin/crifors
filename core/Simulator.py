@@ -5,6 +5,7 @@ Simulator class.
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline
 import scipy.integrate
+import scipy.ndimage.filters
 from astropy.io import fits
 import ctypes as ct
 import logging
@@ -85,7 +86,7 @@ class Simulator(object):
         """
         TODO Different run parameters can be passed through kwargs
         """
-        
+
         waves, pdf = self.source_spectrum[0], self.source_spectrum[1]
         pdf_tot = scipy.integrate.simps(pdf, waves)
         t0 = time.time()
@@ -417,3 +418,13 @@ class Simulator(object):
     def solve(inst, settings):
         log.info("Solving.")
         sys.exit(0)
+
+    def spreadout(self, kernel=None):
+        if not kernel:
+            kernel = np.array([[0, 0, 1, 0, 0],
+                               [0, 2, 2, 2, 0],
+                               [0, 2, 5, 2, 0],
+                               [0, 2, 2, 2, 0],
+                               [0, 0, 0, 0, 0]], dtype='int16')
+
+        self.outarr = scipy.ndimage.filters.convolve(self.outarr, kernel)
