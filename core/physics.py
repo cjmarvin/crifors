@@ -10,7 +10,7 @@ h = 6.62606957e10-34  # m^2 kg / s
 
 def lam_blaze_ech(m, sigma, alpha, beta):
     """Blaze Wavelength of Grating"""
-    return 2.0 * np.sigma * np.sin((beta+alpha) / 2.) * np.cos((beta-alpha) / 2.) / m
+    return 2.0 * sigma * np.sin((beta+alpha) / 2.) * np.cos((beta-alpha) / 2.) / m
 
 def fsr(lam_blaze, m):
     """The wavelength limits for each echelle order"""

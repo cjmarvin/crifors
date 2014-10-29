@@ -39,7 +39,7 @@ inline void progress_bar(int k, int n) {
 
 
 inline double cradians(double angle) {
-    return angle * M_PI / 180.0;
+  return angle * M_PI / 180.0;
 }
 
 
@@ -72,11 +72,11 @@ void raytrace_interp_bin(
     const double* restrict slity,             /* slit location */
     unsigned long* restrict out) {
   const double YPIX_1_2 = (double)NYPIX/2.0;
-	const double X_OFF_L = (double)NXPIX/6.0;
-	const double X_OFF_M = X_OFF_L + (double)NYPIX;
-	const double X_OFF_R = X_OFF_M + (double)NYPIX;
-	const int NXPIX_1_3 = NXPIX / 3;
-	const int NXPIX_2_3 = 2 * NXPIX_1_3;
+  const double X_OFF_L = (double)NXPIX/6.0;
+  const double X_OFF_M = X_OFF_L + (double)NYPIX;
+  const double X_OFF_R = X_OFF_M + (double)NYPIX;
+  const int NXPIX_1_3 = NXPIX / 3;
+  const int NXPIX_2_3 = 2 * NXPIX_1_3;
   const double TAUDL = cradians(TAU_DL);
   const double TAUDM = cradians(TAU_DM);
   const double TAUDR = cradians(TAU_DR);
@@ -87,6 +87,7 @@ void raytrace_interp_bin(
   double sx, sy, sw, sh;
   double xb, xm, xt, yb, ym, yt, phi;
   double xdp, ydp;
+
   // CUBIC SPLINES
   gsl_interp_accel* acc1 = gsl_interp_accel_alloc();
   gsl_interp_accel* acc2 = gsl_interp_accel_alloc();
@@ -124,6 +125,7 @@ void raytrace_interp_bin(
     sw = sh / slit_ratio;
     xd = xm + sx * sw;
     yd = ym + sy * sh;
+
     /* LEFT DETECTOR */
     xdp =  xd-XDL_0 + (xd-XDL_0)*cos(TAUDL) + (yd-YDL_0)*sin(TAUDL);
     ydp =  yd-YDL_0 - (xd-XDL_0)*sin(TAUDL) + (yd-YDL_0)*cos(TAUDL);
@@ -211,16 +213,16 @@ void raytrace_solve_general(
     const double TAU_DR,                      /* right detector rotation */
     double* restrict xslit,          /* slit location */
     double* restrict yslit,          /* slit location */
-    double* restrict lamb,            /* wavelengths */    
+    double* restrict lamb,            /* wavelengths */
     double* restrict returnx,
     double* restrict returny,
-		double* restrict ccd,												/* ccd array */
-		unsigned long* restrict counts) {						/* counts array */
+    double* restrict ccd,                       /* ccd array */
+    unsigned long* restrict counts) {           /* counts array */
 
   /* pre-calculate constants */
-	ALPHA_E = cradians(ALPHA_E);
-	GAMMA_E = cradians(GAMMA_E);
-	ALPHA_G = cradians(ALPHA_G);
+  ALPHA_E = cradians(ALPHA_E);
+  GAMMA_E = cradians(GAMMA_E);
+  ALPHA_G = cradians(ALPHA_G);
   const double ORDER = (double)m;
   const double F_COL2 = F_COL * F_COL;
   const double MU_E0 = ALPHA_E - M_PI;
@@ -245,11 +247,11 @@ void raytrace_solve_general(
   const double COS_NU_G2 = cos(NU_G2);
   const double SIN_NU_G2 = sin(NU_G2);
   const double YPIX_1_2 = (double)NYPIX/2.0;
-	const double X_OFF_L = (double)NXPIX/6.0;
-	const double X_OFF_M = X_OFF_L + (double)NYPIX;
-	const double X_OFF_R = X_OFF_M + (double)NYPIX;
-	const int NXPIX_1_3 = NXPIX / 3;
-	const int NXPIX_2_3 = 2 * NXPIX_1_3;
+  const double X_OFF_L = (double)NXPIX/6.0;
+  const double X_OFF_M = X_OFF_L + (double)NYPIX;
+  const double X_OFF_R = X_OFF_M + (double)NYPIX;
+  const int NXPIX_1_3 = NXPIX / 3;
+  const int NXPIX_2_3 = 2 * NXPIX_1_3;
   const double TAUDL = cradians(TAU_DL);
   const double TAUDM = cradians(TAU_DM);
   const double TAUDR = cradians(TAU_DR);
@@ -264,15 +266,15 @@ void raytrace_solve_general(
   long ix; /* x coordinate [pix] */
   long iy; /* y coordinate [pix] */
   double x, x0, xi, xd, xt, y, y0, yd, yi, yt, z, z0, zt, fcc;
-	double xdpld, xdpmd, xdprd;
+  double xdpld, xdpmd, xdprd;
   unsigned long i;   /* wavelength iterator */
   unsigned long j;   /* slit iterator */
-	
-	// RANDOM NUMBER GENERATOR INITIALIZATION
-	double u;
-	gsl_rng* r = gsl_rng_alloc(gsl_rng_taus); /* global rng generator */
-	long seed = time(NULL);
-	gsl_rng_set(r, seed); 										/* seed the rng */
+
+  // RANDOM NUMBER GENERATOR INITIALIZATION
+  double u;
+  gsl_rng* r = gsl_rng_alloc(gsl_rng_taus); /* global rng generator */
+  long seed = time(NULL);
+  gsl_rng_set(r, seed);                     /* seed the rng */
 
   for (i=0; i<n; ++i) {
     xi = xslit[i];       /* x coord */
@@ -350,15 +352,15 @@ void raytrace_solve_general(
         xd /= DPIX;
         yd /= DPIX;
         ix = (int)floor(xd + X_OFF_L);
-				if (ix >= 0 && ix < NXPIX_1_3) {	
+        if (ix >= 0 && ix < NXPIX_1_3) {
           iy = (int)floor(yd + YPIX_1_2);
           if (iy >= 0 && iy < NYPIX) {
             if (BLAZE_FLAG == 1) {
-						  u = gsl_rng_uniform(r);
-							if (u <= blaze_eff) {
-	              ccd[ix+NXPIX*iy] += wi;
-	              counts[ix+NXPIX*iy] += 1;
-							}
+              u = gsl_rng_uniform(r);
+              if (u <= blaze_eff) {
+                ccd[ix+NXPIX*iy] += wi;
+                counts[ix+NXPIX*iy] += 1;
+              }
             }
             else {
               ccd[ix+NXPIX*iy] += wi;
@@ -390,5 +392,5 @@ void raytrace_solve_general(
         break;
     }
   }
-	gsl_rng_free(r);
+  gsl_rng_free(r);
 }
