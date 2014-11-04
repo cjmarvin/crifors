@@ -189,8 +189,6 @@ void raytrace_solve_general(
     unsigned short m,
     int NXPIX,
     int NYPIX,
-    double xd_0,
-    double yd_0,
     double F_COL,
     double F_COL_2,
     double ALPHA_E,
@@ -216,8 +214,8 @@ void raytrace_solve_general(
     double* restrict lamb,            /* wavelengths */
     double* restrict returnx,
     double* restrict returny,
-    double* restrict ccd,                       /* ccd array */
-    unsigned long* restrict counts) {           /* counts array */
+    double* restrict outwaves,                        /* ccd array */
+    unsigned long* restrict outcounts) {              /* counts array */
 
   /* pre-calculate constants */
   ALPHA_E = cradians(ALPHA_E);
@@ -267,8 +265,7 @@ void raytrace_solve_general(
   long iy; /* y coordinate [pix] */
   double x, x0, xi, xd, xt, y, y0, yd, yi, yt, z, z0, zt, fcc;
   double xdpld, xdpmd, xdprd;
-  unsigned long i;   /* wavelength iterator */
-  unsigned long j;   /* slit iterator */
+  unsigned long i;   /* iterator */
 
   // RANDOM NUMBER GENERATOR INITIALIZATION
   double u;
@@ -342,9 +339,9 @@ void raytrace_solve_general(
     /* ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
 
     /* PROJECTION ONTO DETECTOR */
-    xd = x/z * F_CAM + xd_0;
+    xd = x/z * F_CAM;
     //yd = (y/z * F_CAM  + yd_0);
-    yd = -(y/sqrt(x*x + z*z) * F_CAM + yd_0);
+    yd = -(y/sqrt(x*x + z*z) * F_CAM);
 
     switch (RETURN_MODE) {
       /* BIN PIXELS */
@@ -358,13 +355,13 @@ void raytrace_solve_general(
             if (BLAZE_FLAG == 1) {
               u = gsl_rng_uniform(r);
               if (u <= blaze_eff) {
-                ccd[ix+NXPIX*iy] += wi;
-                counts[ix+NXPIX*iy] += 1;
+                outwaves[ix+NXPIX*iy] += wi;
+                outcounts[ix+NXPIX*iy] += 1;
               }
             }
             else {
-              ccd[ix+NXPIX*iy] += wi;
-              counts[ix+NXPIX*iy] += 1;
+              outwaves[ix+NXPIX*iy] += wi;
+              outcounts[ix+NXPIX*iy] += 1;
             }
           }
         }
@@ -372,20 +369,20 @@ void raytrace_solve_general(
 
       /* RETURN EXACT LOCATIONS [mm] */
       case 1:
-        returnx[i+j*NXPIX] = xd;
-        returny[i+j*NXPIX] = yd;
+        returnx[i] = xd;
+        returny[i] = yd;
         break;
 
       /* RETURN LOCATIONS 0-CENTERED IN [pix] */
       case 2:
-        returnx[i+j*NXPIX] = xd/DPIX ;
-        returny[i+j*NXPIX] = yd/DPIX ;
+        returnx[i] = xd/DPIX ;
+        returny[i] = yd/DPIX ;
         break;
 
       /* RETURN LOCATIONS [pix] */
       case 3:
-        returnx[i+j*NXPIX] = xd/DPIX + (double)NXPIX/2.0;
-        returny[i+j*NXPIX] = yd/DPIX + (double)NYPIX/2.0;
+        returnx[i] = xd/DPIX + (double)NXPIX/2.0;
+        returny[i] = yd/DPIX + (double)NYPIX/2.0;
         break;
 
       default:

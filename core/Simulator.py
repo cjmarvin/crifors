@@ -98,6 +98,9 @@ class Simulator(object):
         t0 = time.time()
         d0 = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
 
+        x_slit = []
+        y_slit = []
+        wave_slit = []
         # START SIMULATION
         log.info("Beginning simulation, %s", d0)
         for m in self.orders:
@@ -123,6 +126,21 @@ class Simulator(object):
             # input through model
             assert slit_x.size == slit_y.size == waves_in.size
             self.modelfunc(m, waves_in, slit_x, slit_y)
+            x_slit.append(slit_x)
+            y_slit.append(slit_y)
+            wave_slit.append(waves_in)
+        x_slit = np.concatenate(x_slit)
+        y_slit = np.concatenate(y_slit)
+        wave_slit = np.concatenate(wave_slit)
+
+        import matplotlib.pyplot as plt
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        ax.scatter(x_slit, y_slit, c=wave_slit, cmap=plt.cm.gray)
+        #plt.colorbar()
+        plt.show()
+        exit()
+
         self.sim_time = time.time() - t0
         inds = np.where(self.outarr != 0)
         self.mean_rays_per_pixel = np.mean(self.outarr[inds])
@@ -224,37 +242,9 @@ class Simulator(object):
         tau_dl = self.tau_dl
         tau_dm = self.tau_dm
         tau_dr = self.tau_dr
-        func = ci.raytrace.raytrace_interp_bin
-        func.argtypes = [
-            ct.c_int,               # nxpix
-            ct.c_int,               # nypix
-            ct.c_double,            # dpix
-            ct.c_double,            # xdl_0
-            ct.c_double,            # xlm_0
-            ct.c_double,            # xdr_0
-            ct.c_double,            # ydl_0
-            ct.c_double,            # ydm_0
-            ct.c_double,            # ydr_0
-            ct.c_double,            # tau_dl
-            ct.c_double,            # tau_dm
-            ct.c_double,            # tau_dr
-            ct.c_double,            # slit_ratio
-            ct.c_ulong,             # nslit
-            ct.c_uint,              # cn
-            ci.array_1d_double,     # cwl
-            ci.array_1d_double,     # cxb
-            ci.array_1d_double,     # cxm
-            ci.array_1d_double,     # cxt
-            ci.array_1d_double,     # cyb
-            ci.array_1d_double,     # cym
-            ci.array_1d_double,     # cyt
-            ci.array_1d_double,     # cphi
-            ci.array_1d_double,     # waves
-            ci.array_1d_double,     # slit_x
-            ci.array_1d_double,     # slit_y
-            ci.array_2d_uint]       # outarr
-        func.restype = None
         log.info("Raytracing order %s...", m)
+        func = ci.interp
+
         func(nxpix, nypix, dpix, xdl_0, xdm_0, xdr_0,
             ydl_0, ydm_0, ydr_0, tau_dl, tau_dm, tau_dr, slit_ratio, n, cn, wl,
             xbot, xmid, xtop, ybot, ymid, ytop, phi, waves, slit_x, slit_y,
@@ -292,41 +282,6 @@ class Simulator(object):
         tau_dm = self.tau_dm
         tau_dr = self.tau_dr
         func = ci.raytrace.raytrace_solve_general
-        func.argtypes = [
-            ct.c_int,               # blaze_flag
-            ct.c_int,               # return_mode
-            ct.c_ulong,             # n (slit and waves)
-            ct.c_uint,              # m
-            ct.c_int,               # nxpix
-            ct.c_int,               # nypix
-            ct.c_double,            # f_col_1
-            ct.c_double,            # f_col_2
-            ct.c_double,            # alpha_ech
-            ct.c_double,            # blaze_ech
-            ct.c_double,            # gamma_ech
-            ct.c_double,            # sigma_ech
-            ct.c_double,            # alpha_cd
-            ct.c_double,            # sigma_cd
-            ct.c_double,            # f_cam
-            ct.c_double,            # f_cam_1
-            ct.c_double,            # dpix
-            ct.c_double,            # xdl_0
-            ct.c_double,            # xlm_0
-            ct.c_double,            # xdr_0
-            ct.c_double,            # ydl_0
-            ct.c_double,            # ydm_0
-            ct.c_double,            # ydr_0
-            ct.c_double,            # tau_dl
-            ct.c_double,            # tau_dm
-            ct.c_double,            # tau_dr
-            ci.array_1d_double,     # slit_x
-            ci.array_1d_double,     # slit_y
-            ci.array_1d_double,     # waves
-            ci.array_1d_double,     # returnx
-            ci.array_1d_double,     # returny
-            ci.array_2d_double,     # returnwaves
-            ci.array_2d_uint]       # returncounts
-        func.restype = None
         log.info("Raytracing order %s...", m)
         func(blaze_flag, return_mode, n, m, nxpix, nypix, f_col_1, f_col_2,
             alpha_ech, blaze_ech, gamma_ech, sigma_ech, alpha_cd, sigma_cd,
