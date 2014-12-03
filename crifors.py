@@ -10,7 +10,7 @@ Usage:
                [--model=MODEL] [--nrays=NRAYS] [--nruns=NRUNS] [--outfn=OUTFN]
                [--plot | --plot-psf | plot-simple] [--psf=PSF] [--rv=RV]
                [--seeing=SEEING] [--slit-width=SLIT] [--verbose=LEVEL]
-               [--spread]
+               [--spread] [--plot-slit]
     crifors.py [-h] | [--help] | [--version]
 
 Arguments:
@@ -45,6 +45,7 @@ Other options:
     --plot             open raytrace plot after simulation and exit
     --plot-psf         preview slit psf function before simulation and exit
     --plot-simple      open simple raytrace plot and exit
+    --plot-slit        open slit psf function
     --ds9              open simulated image in SAO-DS9
 
 Argument details:
@@ -200,9 +201,11 @@ def main():
         ax1 = plt.subplot(gs[0])
         ax2 = plt.subplot(gs[1])
         ax1.imshow(simulator.outarr, origin="lower", interpolation='nearest', cmap="hot")
+        ax1.set_title("CRIRES+ %s-band, echang=%s" % (simulator.band, simulator.echang))
         ax2.plot(simulator.source_spectrum[0], simulator.source_spectrum[1])
         ax2.set_xlabel("Wavelength (nm)")
         ax2.set_ylabel("PDF")
+        ax2.set_title("PHOENIX model, Teff=3000K, log(g)=5.0, [M/H]=0.0")
         plt.tight_layout()
         plt.show()
     t1 = time.time()

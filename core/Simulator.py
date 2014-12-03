@@ -126,72 +126,67 @@ class Simulator(object):
             # input through model
             assert slit_x.size == slit_y.size == waves_in.size
             self.modelfunc(m, waves_in, slit_x, slit_y)
-            x_slit.append(slit_x)
-            y_slit.append(slit_y)
-            wave_slit.append(waves_in)
-        x_slit = np.concatenate(x_slit)
-        y_slit = np.concatenate(y_slit)
-        wave_slit = np.concatenate(wave_slit)
+            if self.plotslit:
+                x_slit.append(slit_x)
+                y_slit.append(slit_y)
+                wave_slit.append(waves_in)
+        if self.plotslit:
+            x_slit = np.concatenate(x_slit)
+            y_slit = np.concatenate(y_slit)
+            wave_slit = np.concatenate(wave_slit)
+            import matplotlib.pyplot as plt
+            cm = plt.cm.get_cmap('autumn_r')
+            slit_mask_inds = np.random.random_integers(0, high=x_slit.size-1, size=1e5)
+            x_slit = x_slit[slit_mask_inds]
+            y_slit = y_slit[slit_mask_inds]
+            wave_slit = wave_slit[slit_mask_inds]
 
-        import matplotlib.pyplot as plt
-        # fig = plt.figure()
-        # ax = fig.add_subplot(111, aspect='equal')
-        cm = plt.cm.get_cmap('OrRd')
-        slit_mask_inds = np.random.random_integers(0, high=x_slit.size-1, size=1e5)
-        x_slit = x_slit[slit_mask_inds]
-        y_slit = y_slit[slit_mask_inds]
-        wave_slit = wave_slit[slit_mask_inds]
-        # sc = ax.scatter(x_slit, y_slit, c=wave_slit, cmap=cm, s=5, edgecolors='none')
-        # plt.colorbar(sc)
-        # plt.show()
+            from scipy.stats import norm
+            from matplotlib.ticker import NullFormatter
+            nullfmt = NullFormatter()
+            left, width = 0.1, 0.65
+            bottom, height = 0.1, 0.65
+            bottom_h = left_h = left+width+0.02
 
-        from scipy.stats import norm
-        from matplotlib.ticker import NullFormatter
-        nullfmt = NullFormatter()
-        left, width = 0.1, 0.65
-        bottom, height = 0.1, 0.65
-        bottom_h = left_h = left+width+0.02
+            rect_scatter = [left, bottom, width, height]
+            rect_histx = [left, bottom_h, width, 0.2]
+            rect_histy = [left_h, bottom, 0.2, height]
 
-        rect_scatter = [left, bottom, width, height]
-        rect_histx = [left, bottom_h, width, 0.2]
-        rect_histy = [left_h, bottom, 0.2, height]
+            # start with a rectangular Figure
+            plt.figure(1, figsize=(8,8))
 
-        # start with a rectangular Figure
-        plt.figure(1, figsize=(8,8))
+            axScatter = plt.axes(rect_scatter)
+            axHistx = plt.axes(rect_histx)
+            axHisty = plt.axes(rect_histy)
 
-        axScatter = plt.axes(rect_scatter)
-        axHistx = plt.axes(rect_histx)
-        axHisty = plt.axes(rect_histy)
+            # no labels
+            axHistx.xaxis.set_major_formatter(nullfmt)
+            axHisty.yaxis.set_major_formatter(nullfmt)
 
-        # no labels
-        # axHistx.xaxis.set_major_formatter(nullfmt)
-        # axHisty.yaxis.set_major_formatter(nullfmt)
+            # the scatter plot:
+            cb = axScatter.scatter(x_slit, y_slit, c=wave_slit, cmap=cm, s=5, edgecolors='none')
+            # now determine nice limits by hand:
+            binwidth = 0.005
+            xymax = np.max( [np.max(np.fabs(x_slit)), np.max(np.fabs(y_slit))] )
+            lim = ( int(xymax/binwidth) + 1) * binwidth
 
-        # the scatter plot:
-        axScatter.scatter(x_slit, y_slit, c=wave_slit, cmap=cm, s=5, edgecolors='none')
-        # now determine nice limits by hand:
-        binwidth = 0.001
-        xymax = np.max( [np.max(np.fabs(x_slit)), np.max(np.fabs(y_slit))] )
-        lim = ( int(xymax/binwidth) + 1) * binwidth
+            axScatter.set_xlim( (-lim, lim) )
+            axScatter.set_ylim( (-lim, lim) )
 
-        axScatter.set_xlim( (-lim, lim) )
-        axScatter.set_ylim( (-lim, lim) )
+            bins = np.arange(-lim, lim + binwidth, binwidth)
+            whatisthis = axHistx.hist(x_slit, bins=bins, normed=True)
+            axHisty.hist(y_slit, bins=bins, orientation='horizontal', normed=True)
 
-        bins = np.arange(-lim, lim + binwidth, binwidth)
-        whatisthis = axHistx.hist(x_slit, bins=bins, normed=True)
-        axHisty.hist(y_slit, bins=bins, orientation='horizontal', normed=True)
+            axHistx.set_xlim( axScatter.get_xlim() )
+            axHisty.set_ylim( axScatter.get_ylim() )
 
-        axHistx.set_xlim( axScatter.get_xlim() )
-        axHisty.set_ylim( axScatter.get_ylim() )
-
-        mux, sigx = norm.fit(slit_x)
-        histx_x = np.linspace(x_slit.min()-0.5, x_slit.max()+0.5)
-        histy_x = np.linspace(y_slit.min()+0.1, y_slit.max()+0.1)
-        axHistx.plot(histx_x, norm.pdf(histx_x, self.mu_x_psf, self.sig_x_psf))
-        axHisty.plot(histy_x, norm.pdf(histy_x, self.mu_y_psf,  self.sig_y_psf))
-
-        plt.show()
-        exit()
+            mux, sigx = norm.fit(slit_x)
+            histx_x = np.linspace(x_slit.min()-0.5, x_slit.max()+0.5)
+            histy_x = np.linspace(y_slit.min()+0.1, y_slit.max()+0.1)
+            #axHistx.plot(histx_x, norm.pdf(histx_x, self.mu_x_psf, self.sig_x_psf))
+            #axHisty.plot(histy_x, norm.pdf(histy_x, self.mu_y_psf,  self.sig_y_psf))
+            plt.colorbar(cb, label='wavelengths [nm]')
+            plt.show()
 
         self.sim_time = time.time() - t0
         inds = np.where(self.outarr != 0)
