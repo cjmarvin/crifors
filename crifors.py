@@ -94,8 +94,7 @@ Option details:
 --ds9
     Calls SAO-DS9 from the shell before exiting.
 --echang=ECHANG
-    The incident echelle angle.  If MODEL is 'interp', this can be in
-    increments of 0.5 from (60.0, 70.0).
+    The incident echelle angle.
 --factor=FACTOR
     If the wavelengths file is in units other than nm, then supply the factor
     to get it in nm.
