@@ -10,6 +10,7 @@ import ConfigParser
 import logging
 import sys
 from defaults import *
+from parsecodev import get_codev_files
 
 # config file helpers
 _bands = {
@@ -193,7 +194,10 @@ class Instrument(object):
 
         elif self.model == "falloff":
             self.find_ccd_limits_falloff()
-            pass
+
+
+    def interp_echang(self):
+        pass
 
 
     def find_ccd_limits_interp(self, write=False):
@@ -203,14 +207,14 @@ class Instrument(object):
 
         # detector x positions in mm
         # NOTE does not take detector tilt into account
-        x_det = np.array([self.xdl_le, self.xdl_re, self.xdm_le,
+        x_det = np.array(
+            [self.xdl_le, self.xdl_re, self.xdm_le,
             self.xdm_re, self.xdr_le, self.xdr_re])
         log.debug("Detector edges = %s mm", x_det)
         for i in xrange(n):
             m = self.orders[i]
-            fn = os.path.splitext(codevparsed_path % (self.band, self.echang, m))[0] + ".npy"
-            log.debug("Loading '%s'...", fn)
-            _m, wl, xbot, xmid, xtop, yb, ymid, yt, slitheight, phi = np.load(fn).T
+            # fn = os.path.splitext(codevparsed_path % (self.band, self.echang, m))[0] + ".npy"
+            _m, wl, xbot, xmid, xtop, yb, ymid, yt, slitheight, phi = get_codev_files(self, m)
             inds = np.argsort(wl)
             wl = wl[inds]
             xbot = xbot[inds]

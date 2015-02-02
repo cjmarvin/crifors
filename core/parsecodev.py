@@ -13,10 +13,10 @@ import re
 import sys
 import time
 try:
-    from defaults import logs_dir, codev_dir
+    from defaults import logs_dir, codev_dir, codevparsed_path
 except ImportError:
     sys.path.append(os.getcwd())
-    from defaults import logs_dir, codev_dir
+    from defaults import logs_dir, codev_dir, codevparsed_path
 
 codev_fn = "criresplus_%s_v6_echelle_angle_%s_order_%s.txt"
 write_dir = os.path.join(codev_dir, "parsed")
@@ -28,6 +28,12 @@ headerline = "ORDER WAVELENGTH_NM XBOT_PIX XMID_PIX XTOP_PIX YBOT_PIX YMID_PIX Y
 headerfmt = "#{:<7} {:<15} {:<18} {:<18} {:<18} {:<18} {:<18} {:<18} {:<18} {:<18}\n"
 datafmt = "{:<8} {:<15} {:<18} {:<18} {:<18} {:<18} {:<18} {:<18} {:<18} {:<18}\n"
 log = logging.getLogger(__name__)
+
+
+def linterp(X, X1, X2, Q11, Q21):
+    """Linear interpolation."""
+    return (X2-X)/(X2-X1)*Q11 + (X-X1)/(X2-X1)*Q21
+
 
 class Mode():
     """Testing dummy class"""
@@ -185,6 +191,34 @@ def make_data_tables(band, angle, plot=False, write=False):
         plt.ylabel("mm")
         plt.show()
         plt.close()
+
+
+
+def get_codev_files(self, m):
+    ang_min = 60.0
+    ang_max = 70.0
+    ang_step = 0.5
+    ang_range = np.arange(ang_min, ang_max+ang_step, ang_step)
+    if self.echang not in ang_range:
+        idx = np.searchsorted(ang_range, self.echang)
+        ang_lower = ang_range[idx-1]
+        ang_upper = ang_range[idx]
+        fn1 = os.path.splitext(codevparsed_path % (self.band, ang_lower, m))[0] + ".npy"
+        fn2 = os.path.splitext(codevparsed_path % (self.band, ang_upper, m))[0] + ".npy"
+        log.debug("Loading '%s'...", fn1)
+        log.debug("Loading '%s'...", fn2)
+        table1 = np.load(fn1).T
+        table2 = np.load(fn2).T
+        out = np.empty(table1.shape)
+        inds1 = np.argsort(table1[:, 1])
+        inds2 = np.argsort(table2[:, 1])
+        for i,(c1, c2) in enumerate(zip(table1, table2)):
+            out[i] = linterp(self.echang, ang_lower, ang_upper, c1, c2)
+        return out
+    else:
+        fn = os.path.splitext(codevparsed_path % (self.band, self.echang, m))[0] + ".npy"
+        return np.load(fn).T
+
 
 # =============================== MAIN =======================================
 

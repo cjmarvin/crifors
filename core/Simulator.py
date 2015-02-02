@@ -17,6 +17,7 @@ from defaults import *
 import physics
 import slit
 import wavefuncs as wf
+from parsecodev import get_codev_files
 
 log = logging.getLogger(__name__)
 
@@ -159,9 +160,9 @@ class Simulator(object):
     # =========================[ model methods ]===============================
 
     def interp(self, m, waves, slit_x, slit_y):
-        fn = os.path.join(codevparsednpy_path % (self.band, self.echang, m))
-        log.info("Loading '%s'", fn)
-        _m, wl, xb, xmid, xt, yb, ymid, yt, slitheight, phi = np.load(fn).T
+        # fn = os.path.join(codevparsednpy_path % (self.band, self.echang, m))
+        # log.info("Loading '%s'", fn)
+        _m, wl, xb, xmid, xt, yb, ymid, yt, slitheight, phi = get_codev_files(self, m)
         inds = np.argsort(wl)
         wl = wl[inds]
         xbot = xb[inds]
