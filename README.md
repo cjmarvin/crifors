@@ -145,13 +145,13 @@ It can be changed with the `--seeing` option:
 In addition to supplied input spectra and the included PHOENIX model, the
 following sources can be input as well:
 
-## flatfield
+### flatfield
 With the flatfield source, `f`, `F` or `flatfield`, an ideal flatfield spectrum
 is fed into the spectrograph.  It assumes a continuous, uniform distribution.
 
 	python crifors.py Y F
 
-## ~~wavemap~~
+### ~~wavemap~~
 Not implemented yet.
 With the wavemap source, `w`, `W` or `wavemap`, pixel values will be wavelengths instead of counts.
 
@@ -190,11 +190,14 @@ only detector settings.
 
 ------------------------------
 # _TODO_
- * physical model w/ blaze
+ * physical model w/ blaze function
+   it seems that the problem here lies with inconsistent instrument parameters
  * polarimeter mode
  * background light file
+ * slit decker mask
  * ~~config file input~~
- * parameters by command line
+ * ~~input echelle angle interpolation~~
+ * individual parameters by command line
 
 ------------------------------
 # _WISH LIST_
