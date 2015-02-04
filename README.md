@@ -87,11 +87,11 @@ python crifors.py Y </path/to/wavelength.fits> </path/to/flux.fits> --factor=0.1
 
 # __echelle angle__
 
-The echelle angle can be changed by the `--echang` option. ~~ Note that with
-`--model=interp`, it can only be given in increments of 0.5 from 60.0 to 70.0,~~
+The echelle angle can be changed by the `--echang` option. ~~Note that with
+`--model=interp`, it can only be given in increments of 0.5 from 60.0 to 70.0~~
 with a default of 63.5:
 
-	python crifors.py Y </path/to/spectrum.fits> --echang=64.0
+	python crifors.py Y </path/to/spectrum.fits> --echang=64.1
 
 # __noise__
 
