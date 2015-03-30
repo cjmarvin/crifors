@@ -1,4 +1,5 @@
-# __CRIFORS__ version 0.2.0
+# __CRIFORS__
+### v0.2.0
 # (CRIRES+ Forward Simulator)
 ----
 
