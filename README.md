@@ -1,6 +1,6 @@
 # __CRIFORS__
-### v0.2.0
 # (CRIRES+ Forward Simulator)
+### version 0.2.0
 ----
 
 ![VLT - Paranal Observatory, Chile](http://upload.wikimedia.org/wikipedia/commons/e/ee/The_VLT%C2%B4s_Laser_Guide_Star.jpg)
