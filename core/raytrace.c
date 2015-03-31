@@ -182,6 +182,14 @@ void raytrace_interp_bin(
 }
 
 
+// Physical model is based on implementation for CARMENES
+// (Marvin, 2012; master's thesis)
+// http://www.astro.physik.uni-goettingen.de/~cmarvin/masters_thesis/mthesis_chris.pdf
+//
+// which is based on Ballester & Rosa (1997)
+// http://adsabs.harvard.edu/abs/1997A%26AS..126..563B
+//
+// which draws heavily from Astronomical Optics, 2nd Edition by Schroeder (1987).
 void raytrace_solve_general(
     int BLAZE_FLAG,
     int RETURN_MODE,
@@ -223,12 +231,12 @@ void raytrace_solve_general(
   ALPHA_G = cradians(ALPHA_G);
   const double ORDER = (double)m;
   const double F_COL2 = F_COL * F_COL;
-  const double MU_E0 = ALPHA_E - M_PI;
+  const double MU_E0 = ALPHA_E - M_PI - cradians(-3.55);
   const double NU_E0 = GAMMA_E;
-  const double MU_E1 = ALPHA_E + M_PI - cradians(3.55);
+  const double MU_E1 = ALPHA_E + M_PI + cradians(-3.55);
   const double NU_E1 = -GAMMA_E;
   const double NU_G0 = cradians(0.0);//ALPHA_G;
-  const double NU_G1 = ALPHA_G - M_PI;
+  const double NU_G1 = ALPHA_G + M_PI;
   const double NU_G2 = ALPHA_G + M_PI;
   const double COS_MU_E0 = cos(MU_E0);
   const double SIN_MU_E0 = sin(MU_E0);
